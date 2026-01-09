@@ -1,0 +1,49 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.22.x'
+
+    - name: Install Flet and Dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install flet
+
+    # 1. ҚОСЫМШАНЫ ЖИНАУ (App Name өзгерту)
+    # --product флагы телефондағы атын "№63 Қ.Сатбаев" деп қояды
+    - name: Build APK
+      run: |
+        flet build apk --verbose --product "№63 Қ.Сатбаев"
+
+    # 2. ФАЙЛДЫҢ АТЫН ӨЗГЕРТУ
+    # app-release.apk дегенді "63_Satbayev.apk" деп өзгертеміз
+    # (APK файлының атында кириллица немесе № белгісі болса, кейбір телефондар ашпай қалуы мүмкін, сондықтан файл атын латынша қойған дұрыс)
+    - name: Rename APK
+      run: |
+        mv build/apk/app-release.apk build/apk/63_Satbayev.apk
+
+    # 3. APK-ны ЖҮКТЕУ
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: 63_Satbayev_App
+        path: build/apk/63_Satbayev.apk
