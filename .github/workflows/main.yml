@@ -28,15 +28,13 @@ jobs:
         pip install -r requirements.txt
         pip install flet
 
-    # 1. ҚОСЫМШАНЫ ЖИНАУ (App Name өзгерту)
-    # --product флагы телефондағы атын "№63 Қ.Сатбаев" деп қояды
+    # 1. ҚОСЫМШАНЫ ЖИНАУ (--yes КОМАНДАСЫ ҚОСЫЛДЫ)
+    # --yes: Барлық сұрақтарға автоматты түрде "Иә" деп жауап береді
     - name: Build APK
       run: |
-        flet build apk --verbose --product "№63 Қ.Сатбаев"
+        flet build apk --verbose --yes --product "№63 Қ.Сатбаев"
 
     # 2. ФАЙЛДЫҢ АТЫН ӨЗГЕРТУ
-    # app-release.apk дегенді "63_Satbayev.apk" деп өзгертеміз
-    # (APK файлының атында кириллица немесе № белгісі болса, кейбір телефондар ашпай қалуы мүмкін, сондықтан файл атын латынша қойған дұрыс)
     - name: Rename APK
       run: |
         mv build/apk/app-release.apk build/apk/63_Satbayev.apk
